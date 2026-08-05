@@ -1,0 +1,49 @@
+@model IEnumerable<Patient>
+
+@{
+    ViewData["Title"] = "Patients";
+}
+
+<section class="workspace-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Patient Registry</h2>
+            <p>Secure index for Medicare member claim history and contact details.</p>
+        </div>
+        <button class="btn btn-primary" type="button" disabled>Add Patient</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Medicare Number</th>
+                    <th>Date of Birth</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var patient in Model)
+                {
+                    <tr>
+                        <td>@patient.LastName, @patient.FirstName</td>
+                        <td>@patient.MedicareNumber</td>
+                        <td>@patient.DateOfBirth</td>
+                        <td>@patient.Phone</td>
+                        <td>@patient.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <h3>No patients found</h3>
+            <p>Patient CRUD is the next implementation step after the foundation migration.</p>
+        </div>
+    }
+</section>

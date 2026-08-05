@@ -1,0 +1,86 @@
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="metric-grid">
+    <article class="metric-card">
+        <span>Patients</span>
+        <strong>@Model.TotalPatients</strong>
+    </article>
+    <article class="metric-card">
+        <span>Providers</span>
+        <strong>@Model.TotalProviders</strong>
+    </article>
+    <article class="metric-card">
+        <span>Open Claims</span>
+        <strong>@Model.OpenClaims</strong>
+    </article>
+    <article class="metric-card">
+        <span>Pending Value</span>
+        <strong>@Model.PendingClaimValue.ToString("C")</strong>
+    </article>
+</section>
+
+<section class="workspace-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Recent Claim Activity</h2>
+            <p>Claims needing review, documentation, approval, or payment follow-up.</p>
+        </div>
+        <a class="btn btn-primary" asp-controller="Claims" asp-action="Index">View Claims</a>
+    </div>
+
+    @if (Model.RecentClaims.Any())
+    {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Claim</th>
+                        <th>Patient</th>
+                        <th>Provider</th>
+                        <th>Status</th>
+                        <th class="text-end">Billed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var claim in Model.RecentClaims)
+                    {
+                        <tr>
+                            <td>@claim.ClaimNumber</td>
+                            <td>@claim.Patient?.LastName, @claim.Patient?.FirstName</td>
+                            <td>@claim.Provider?.OrganizationName</td>
+                            <td><span class="status-pill">@claim.Status</span></td>
+                            <td class="text-end">@claim.BilledAmount.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h3>No claim activity yet</h3>
+            <p>Create the first patient, provider, and claim records after the initial migration is applied.</p>
+        </div>
+    }
+</section>
+
+<section class="roadmap-grid">
+    <article>
+        <h2>Next Build Steps</h2>
+        <ol>
+            <li>Apply EF migrations against SQL Server.</li>
+            <li>Scaffold secured CRUD workflows for patients and providers.</li>
+            <li>Add claim intake, status transitions, and audit history.</li>
+            <li>Build reporting views for denial, approval, and paid trends.</li>
+        </ol>
+    </article>
+    <article>
+        <h2>Access Model</h2>
+        <p>Identity is configured for role-based access with Administrator, ClaimsManager, BillingSpecialist, and ReadOnly roles.</p>
+    </article>
+</section>

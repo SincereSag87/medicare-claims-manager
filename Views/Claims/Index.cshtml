@@ -1,0 +1,53 @@
+@model IEnumerable<Claim>
+
+@{
+    ViewData["Title"] = "Claims";
+}
+
+<section class="workspace-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Claims Work Queue</h2>
+            <p>Operational queue for submitted, reviewed, approved, denied, and paid claims.</p>
+        </div>
+        <button class="btn btn-primary" type="button" disabled>New Claim</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Claim</th>
+                    <th>Patient</th>
+                    <th>Provider</th>
+                    <th>Service Date</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th class="text-end">Billed</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var claim in Model)
+                {
+                    <tr>
+                        <td>@claim.ClaimNumber</td>
+                        <td>@claim.Patient?.LastName, @claim.Patient?.FirstName</td>
+                        <td>@claim.Provider?.OrganizationName</td>
+                        <td>@claim.ServiceDate</td>
+                        <td><span class="status-pill">@claim.Status</span></td>
+                        <td>@claim.Priority</td>
+                        <td class="text-end">@claim.BilledAmount.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <h3>No claims found</h3>
+            <p>Claim intake, status changes, and audit trail screens come next.</p>
+        </div>
+    }
+</section>

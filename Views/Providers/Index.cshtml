@@ -1,0 +1,47 @@
+@model IEnumerable<Provider>
+
+@{
+    ViewData["Title"] = "Providers";
+}
+
+<section class="workspace-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Provider Directory</h2>
+            <p>Provider organizations, NPI numbers, specialties, and claim relationships.</p>
+        </div>
+        <button class="btn btn-primary" type="button" disabled>Add Provider</button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Organization</th>
+                    <th>NPI</th>
+                    <th>Specialty</th>
+                    <th>Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var provider in Model)
+                {
+                    <tr>
+                        <td>@provider.OrganizationName</td>
+                        <td>@provider.Npi</td>
+                        <td>@provider.Specialty</td>
+                        <td>@provider.ContactEmail</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="empty-state">
+            <h3>No providers found</h3>
+            <p>Provider CRUD will support the claims workflow in the next phase.</p>
+        </div>
+    }
+</section>
