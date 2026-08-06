@@ -1,0 +1,122 @@
+@model AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<section class="metric-grid">
+    <article class="metric-card">
+        <span>Users</span>
+        <strong>@Model.UserCount</strong>
+    </article>
+    <article class="metric-card">
+        <span>Roles</span>
+        <strong>@Model.RoleCount</strong>
+    </article>
+    <article class="metric-card">
+        <span>Claims</span>
+        <strong>@Model.ClaimCount</strong>
+    </article>
+    <article class="metric-card">
+        <span>Directory Records</span>
+        <strong>@(Model.PatientCount + Model.ProviderCount)</strong>
+    </article>
+</section>
+
+<section class="workspace-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>User Access</h2>
+            <p>Manage user role assignments and email confirmation state.</p>
+        </div>
+    </div>
+
+    @if (TempData["StatusMessage"] is string statusMessage)
+    {
+        <div class="alert alert-success" role="status">@statusMessage</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email Confirmed</th>
+                    <th>Roles</th>
+                    <th>Lockout</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>
+                            <strong>@user.Email</strong>
+                            <span class="table-subtext">@user.UserName</span>
+                        </td>
+                        <td>
+                            @if (user.EmailConfirmed)
+                            {
+                                <span class="status-pill success-pill">Confirmed</span>
+                            }
+                            else
+                            {
+                                <span class="status-pill warning-pill">Pending</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="pill-row">
+                                @foreach (var role in user.Roles)
+                                {
+                                    <span class="status-pill">@role</span>
+                                }
+                                @if (!user.Roles.Any())
+                                {
+                                    <span class="table-subtext">No roles</span>
+                                }
+                            </div>
+                        </td>
+                        <td>@(user.LockoutEnd?.LocalDateTime.ToString("MMM d, yyyy h:mm tt") ?? "None")</td>
+                        <td class="text-end action-links">
+                            <a asp-action="EditRoles" asp-route-id="@user.Id">Roles</a>
+                            @if (!user.EmailConfirmed)
+                            {
+                                <form class="inline-form" asp-action="ConfirmEmail" method="post">
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button class="link-button" type="submit">Confirm</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Users.Any())
+    {
+        <div class="empty-state">
+            <h3>No users found</h3>
+            <p>Registered Identity users will appear here.</p>
+        </div>
+    }
+</section>
+
+<section class="workspace-panel mt-3">
+    <div class="panel-heading">
+        <div>
+            <h2>System Roles</h2>
+            <p>Roles are seeded at startup and used for role-based access control.</p>
+        </div>
+    </div>
+    <div class="role-grid">
+        @foreach (var role in Model.Roles)
+        {
+            <article>
+                <strong>@role.Name</strong>
+                <span>@role.Id</span>
+            </article>
+        }
+    </div>
+</section>

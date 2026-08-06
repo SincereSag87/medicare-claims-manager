@@ -53,6 +53,7 @@ app.MapRazorPages()
    .WithStaticAssets();
 
 await SeedRolesAsync(app.Services);
+await SeedAdminUserAsync(app.Services, app.Configuration);
 
 app.Run();
 
@@ -68,5 +69,28 @@ static async Task SeedRolesAsync(IServiceProvider services)
         {
             await roleManager.CreateAsync(new IdentityRole(role));
         }
+    }
+}
+
+static async Task SeedAdminUserAsync(IServiceProvider services, IConfiguration configuration)
+{
+    var adminEmail = configuration["AdminUser:Email"];
+    if (string.IsNullOrWhiteSpace(adminEmail))
+    {
+        return;
+    }
+
+    using var scope = services.CreateScope();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var user = await userManager.FindByEmailAsync(adminEmail);
+
+    if (user is null)
+    {
+        return;
+    }
+
+    if (!await userManager.IsInRoleAsync(user, "Administrator"))
+    {
+        await userManager.AddToRoleAsync(user, "Administrator");
     }
 }

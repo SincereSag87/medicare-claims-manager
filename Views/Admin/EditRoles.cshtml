@@ -1,0 +1,52 @@
+@model EditUserRolesViewModel
+
+@{
+    ViewData["Title"] = "Edit Roles";
+}
+
+<section class="workspace-panel narrow-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>@Model.Email</h2>
+            <p>Assign application roles for this user.</p>
+        </div>
+    </div>
+
+    <form asp-action="EditRoles" method="post">
+        <input type="hidden" asp-for="UserId" />
+        <input type="hidden" asp-for="Email" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+        <div class="role-selection-list">
+            @foreach (var role in Model.Roles)
+            {
+                <label class="role-selection">
+                    <input class="form-check-input" type="checkbox" name="selectedRoles" value="@role.RoleName" checked="@role.IsSelected" />
+                    <span>
+                        <strong>@role.RoleName</strong>
+                        <em>@GetRoleDescription(role.RoleName)</em>
+                    </span>
+                </label>
+            }
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save Roles</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>
+
+@functions {
+    private static string GetRoleDescription(string roleName)
+    {
+        return roleName switch
+        {
+            "Administrator" => "Full system administration and access management.",
+            "ClaimsManager" => "Claim oversight, reporting, and workflow management.",
+            "BillingSpecialist" => "Claim intake and operational claim updates.",
+            "ReadOnly" => "View-only access for records and reports.",
+            _ => "Application role."
+        };
+    }
+}

@@ -67,6 +67,14 @@ Server=(localdb)\mssqllocaldb;Database=MedicareClaimsManager_Dev;Trusted_Connect
 
 Override `ConnectionStrings:DefaultConnection` for Azure SQL or another SQL Server instance with user secrets or environment variables.
 
+To promote the first registered user to `Administrator`, configure:
+
+```text
+AdminUser:Email=admin@example.com
+```
+
+The user must already exist in ASP.NET Core Identity. The role is assigned during application startup.
+
 ## Security Notes
 
 - Do not commit real patient data, Medicare identifiers, credentials, API keys, or production exports.
