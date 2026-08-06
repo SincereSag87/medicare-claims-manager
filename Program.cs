@@ -55,6 +55,11 @@ app.MapRazorPages()
 await SeedRolesAsync(app.Services);
 await SeedAdminUserAsync(app.Services, app.Configuration);
 
+if (app.Environment.IsDevelopment())
+{
+    await DevelopmentDataSeeder.SeedAsync(app.Services, app.Configuration);
+}
+
 app.Run();
 
 static async Task SeedRolesAsync(IServiceProvider services)

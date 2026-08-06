@@ -75,6 +75,14 @@ AdminUser:Email=admin@example.com
 
 The user must already exist in ASP.NET Core Identity. The role is assigned during application startup.
 
+Development runs seed synthetic demo data by default when the patient, provider, and claim tables are empty:
+
+```text
+SeedData:Enabled=true
+```
+
+Set it to `false` to start with an empty local database.
+
 ## Documentation
 
 - [Architecture Overview](docs/ARCHITECTURE.md)

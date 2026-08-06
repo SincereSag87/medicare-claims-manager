@@ -37,3 +37,7 @@ Allowed transitions:
 | `Paid` | Terminal |
 
 Status changes are performed from Claim Details and recorded in `ClaimAuditEntry`.
+
+## Development Data
+
+`DevelopmentDataSeeder` creates synthetic demo records when `SeedData:Enabled` is true and the core operational tables are empty. It is invoked only in the Development environment.

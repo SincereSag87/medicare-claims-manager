@@ -37,6 +37,22 @@ dotnet ef database update
 - Do not place Medicare numbers, credentials, exports, or raw claim files in the repository.
 - Keep operational exports outside source control.
 
+## Development Seed Data
+
+Synthetic demo data is enabled in `appsettings.Development.json`:
+
+```text
+SeedData:Enabled=true
+```
+
+The seeder runs only in Development and only when patient, provider, and claim tables are empty. It creates synthetic patients, providers, claims, and audit entries for dashboard and reporting demos.
+
+Disable it by setting:
+
+```text
+SeedData:Enabled=false
+```
+
 ## Common Checks
 
 ```bash
