@@ -1,0 +1,26 @@
+@model Provider
+
+@{
+    ViewData["Title"] = "Add Provider";
+}
+
+<section class="workspace-panel narrow-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Add Provider</h2>
+            <p>Create a provider organization record for claim intake and reporting.</p>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <partial name="_ProviderForm" model="Model" />
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save Provider</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

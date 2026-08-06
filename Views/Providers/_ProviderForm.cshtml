@@ -1,0 +1,26 @@
+@model Provider
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+<div class="form-grid">
+    <div class="form-field">
+        <label asp-for="OrganizationName" class="form-label"></label>
+        <input asp-for="OrganizationName" class="form-control" autocomplete="organization" />
+        <span asp-validation-for="OrganizationName" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="Npi" class="form-label"></label>
+        <input asp-for="Npi" class="form-control" inputmode="numeric" autocomplete="off" />
+        <span asp-validation-for="Npi" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="Specialty" class="form-label"></label>
+        <input asp-for="Specialty" class="form-control" />
+        <span asp-validation-for="Specialty" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="ContactEmail" class="form-label"></label>
+        <input asp-for="ContactEmail" class="form-control" autocomplete="email" />
+        <span asp-validation-for="ContactEmail" class="text-danger"></span>
+    </div>
+</div>

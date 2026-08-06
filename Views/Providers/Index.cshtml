@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Providers";
+    var search = ViewData["Search"] as string;
 }
 
 <section class="workspace-panel">
@@ -10,8 +11,23 @@
             <h2>Provider Directory</h2>
             <p>Provider organizations, NPI numbers, specialties, and claim relationships.</p>
         </div>
-        <button class="btn btn-primary" type="button" disabled>Add Provider</button>
+        <a class="btn btn-primary" asp-action="Create">Add Provider</a>
     </div>
+
+    @if (TempData["StatusMessage"] is string statusMessage)
+    {
+        <div class="alert alert-success" role="status">@statusMessage</div>
+    }
+
+    <form class="toolbar-form" asp-action="Index" method="get">
+        <label class="visually-hidden" for="search">Search providers</label>
+        <input id="search" class="form-control" name="search" value="@search" placeholder="Search by organization, NPI, specialty, or email" />
+        <button class="btn btn-primary" type="submit">Search</button>
+        @if (!string.IsNullOrWhiteSpace(search))
+        {
+            <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+        }
+    </form>
 
     <div class="table-responsive">
         <table class="table align-middle">
@@ -21,6 +37,7 @@
                     <th>NPI</th>
                     <th>Specialty</th>
                     <th>Contact</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +48,11 @@
                         <td>@provider.Npi</td>
                         <td>@provider.Specialty</td>
                         <td>@provider.ContactEmail</td>
+                        <td class="text-end action-links">
+                            <a asp-action="Details" asp-route-id="@provider.Id">Details</a>
+                            <a asp-action="Edit" asp-route-id="@provider.Id">Edit</a>
+                            <a class="danger-link" asp-action="Delete" asp-route-id="@provider.Id">Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -41,7 +63,7 @@
     {
         <div class="empty-state">
             <h3>No providers found</h3>
-            <p>Provider CRUD will support the claims workflow in the next phase.</p>
+            <p>Add a provider record or adjust your search criteria.</p>
         </div>
     }
 </section>

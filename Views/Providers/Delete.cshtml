@@ -1,0 +1,57 @@
+@model Provider
+
+@{
+    ViewData["Title"] = "Delete Provider";
+    var hasClaims = Model.Claims.Any();
+}
+
+<section class="workspace-panel narrow-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Delete Provider</h2>
+            <p>Review this provider record before removal.</p>
+        </div>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    @if (hasClaims)
+    {
+        <div class="alert alert-warning" role="alert">
+            This provider has @Model.Claims.Count linked claim record(s) and cannot be deleted.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            This action permanently removes the provider record.
+        </div>
+    }
+
+    <dl class="detail-grid">
+        <div>
+            <dt>Organization</dt>
+            <dd>@Model.OrganizationName</dd>
+        </div>
+        <div>
+            <dt>NPI</dt>
+            <dd>@Model.Npi</dd>
+        </div>
+        <div>
+            <dt>Specialty</dt>
+            <dd>@Model.Specialty</dd>
+        </div>
+        <div>
+            <dt>Contact Email</dt>
+            <dd>@Model.ContactEmail</dd>
+        </div>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit" disabled="@hasClaims">Delete Provider</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>

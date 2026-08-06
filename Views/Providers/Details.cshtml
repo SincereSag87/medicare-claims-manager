@@ -1,0 +1,82 @@
+@model Provider
+
+@{
+    ViewData["Title"] = "Provider Details";
+}
+
+<section class="workspace-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>@Model.OrganizationName</h2>
+            <p>Provider profile and linked claim history.</p>
+        </div>
+        <div class="button-row">
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
+        </div>
+    </div>
+
+    <dl class="detail-grid">
+        <div>
+            <dt>NPI</dt>
+            <dd>@Model.Npi</dd>
+        </div>
+        <div>
+            <dt>Specialty</dt>
+            <dd>@Model.Specialty</dd>
+        </div>
+        <div>
+            <dt>Contact Email</dt>
+            <dd>@Model.ContactEmail</dd>
+        </div>
+        <div>
+            <dt>Linked Claims</dt>
+            <dd>@Model.Claims.Count</dd>
+        </div>
+    </dl>
+</section>
+
+<section class="workspace-panel mt-3">
+    <div class="panel-heading">
+        <div>
+            <h2>Claims</h2>
+            <p>@Model.Claims.Count linked claim records.</p>
+        </div>
+    </div>
+
+    @if (Model.Claims.Any())
+    {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Claim</th>
+                        <th>Patient</th>
+                        <th>Service Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Billed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var claim in Model.Claims.OrderByDescending(claim => claim.ServiceDate))
+                    {
+                        <tr>
+                            <td>@claim.ClaimNumber</td>
+                            <td>@claim.Patient?.LastName, @claim.Patient?.FirstName</td>
+                            <td>@claim.ServiceDate.ToString("MMM d, yyyy")</td>
+                            <td><span class="status-pill">@claim.Status</span></td>
+                            <td class="text-end">@claim.BilledAmount.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h3>No claims linked</h3>
+            <p>Claims intake will connect provider records to patients and service dates.</p>
+        </div>
+    }
+</section>
