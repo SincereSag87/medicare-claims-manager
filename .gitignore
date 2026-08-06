@@ -41,6 +41,8 @@ build/
 coverage/
 .next/
 out/
+publish/
+publish-check/
 
 # Local databases and exports
 *.sqlite

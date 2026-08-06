@@ -75,6 +75,12 @@ AdminUser:Email=admin@example.com
 
 The user must already exist in ASP.NET Core Identity. The role is assigned during application startup.
 
+## Documentation
+
+- [Architecture Overview](docs/ARCHITECTURE.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
+- [Operations Guide](docs/OPERATIONS.md)
+
 ## Security Notes
 
 - Do not commit real patient data, Medicare identifiers, credentials, API keys, or production exports.
