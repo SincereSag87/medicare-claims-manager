@@ -17,6 +17,8 @@ public class ApplicationDbContext : IdentityDbContext
 
     public DbSet<Claim> Claims => Set<Claim>();
 
+    public DbSet<ClaimAuditEntry> ClaimAuditEntries => Set<ClaimAuditEntry>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -33,6 +35,9 @@ public class ApplicationDbContext : IdentityDbContext
             .HasIndex(claim => claim.ClaimNumber)
             .IsUnique();
 
+        builder.Entity<ClaimAuditEntry>()
+            .HasIndex(entry => new { entry.ClaimId, entry.ChangedAt });
+
         builder.Entity<Claim>()
             .HasOne(claim => claim.Patient)
             .WithMany(patient => patient.Claims)
@@ -44,5 +49,11 @@ public class ApplicationDbContext : IdentityDbContext
             .WithMany(provider => provider.Claims)
             .HasForeignKey(claim => claim.ProviderId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<ClaimAuditEntry>()
+            .HasOne(entry => entry.Claim)
+            .WithMany(claim => claim.AuditEntries)
+            .HasForeignKey(entry => entry.ClaimId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -54,4 +54,6 @@ public class Claim
 
     [Display(Name = "Updated")]
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    public ICollection<ClaimAuditEntry> AuditEntries { get; set; } = new List<ClaimAuditEntry>();
 }

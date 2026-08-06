@@ -1,61 +1,151 @@
-@model Claim
+@model ClaimDetailsViewModel
 
 @{
     ViewData["Title"] = "Claim Details";
+    var claim = Model.Claim;
 }
 
 <section class="workspace-panel">
     <div class="panel-heading">
         <div>
-            <h2>@Model.ClaimNumber</h2>
+            <h2>@claim.ClaimNumber</h2>
             <p>Claim intake record, financials, and workflow state.</p>
         </div>
         <div class="button-row">
-            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@claim.Id">Edit</a>
             <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
         </div>
     </div>
 
+    @if (TempData["StatusMessage"] is string statusMessage)
+    {
+        <div class="alert alert-success" role="status">@statusMessage</div>
+    }
+
     <dl class="detail-grid">
         <div>
             <dt>Patient</dt>
-            <dd>@Model.Patient?.LastName, @Model.Patient?.FirstName</dd>
+            <dd>@claim.Patient?.LastName, @claim.Patient?.FirstName</dd>
         </div>
         <div>
             <dt>Provider</dt>
-            <dd>@Model.Provider?.OrganizationName</dd>
+            <dd>@claim.Provider?.OrganizationName</dd>
         </div>
         <div>
             <dt>Service Date</dt>
-            <dd>@Model.ServiceDate.ToString("MMM d, yyyy")</dd>
+            <dd>@claim.ServiceDate.ToString("MMM d, yyyy")</dd>
         </div>
         <div>
             <dt>Status</dt>
-            <dd><span class="status-pill">@Model.Status</span></dd>
+            <dd><span class="status-pill">@claim.Status</span></dd>
         </div>
         <div>
             <dt>Priority</dt>
-            <dd>@Model.Priority</dd>
+            <dd>@claim.Priority</dd>
         </div>
         <div>
             <dt>Billed Amount</dt>
-            <dd>@Model.BilledAmount.ToString("C")</dd>
+            <dd>@claim.BilledAmount.ToString("C")</dd>
         </div>
         <div>
             <dt>Approved Amount</dt>
-            <dd>@(Model.ApprovedAmount?.ToString("C") ?? "Not approved")</dd>
+            <dd>@(claim.ApprovedAmount?.ToString("C") ?? "Not approved")</dd>
         </div>
         <div>
             <dt>Updated</dt>
-            <dd>@Model.UpdatedAt.LocalDateTime.ToString("MMM d, yyyy h:mm tt")</dd>
+            <dd>@claim.UpdatedAt.LocalDateTime.ToString("MMM d, yyyy h:mm tt")</dd>
         </div>
     </dl>
 
-    @if (!string.IsNullOrWhiteSpace(Model.Notes))
+    @if (!string.IsNullOrWhiteSpace(claim.Notes))
     {
         <div class="notes-panel">
             <h3>Notes</h3>
-            <p>@Model.Notes</p>
+            <p>@claim.Notes</p>
+        </div>
+    }
+</section>
+
+<section class="workspace-panel mt-3">
+    <div class="panel-heading">
+        <div>
+            <h2>Status Workflow</h2>
+            <p>Move this claim through the approved workflow states.</p>
+        </div>
+    </div>
+
+    @if (Model.NextStatuses.Any())
+    {
+        <form class="status-workflow" asp-action="ChangeStatus" method="post">
+            <input type="hidden" name="id" value="@claim.Id" />
+            <div class="form-field">
+                <label class="form-label" for="nextStatus">Next Status</label>
+                <select id="nextStatus" class="form-select" name="nextStatus">
+                    @foreach (var status in Model.NextStatuses)
+                    {
+                        <option value="@status">@status</option>
+                    }
+                </select>
+            </div>
+            <div class="form-field">
+                <label class="form-label" for="statusNotes">Workflow Notes</label>
+                <input id="statusNotes" class="form-control" name="notes" maxlength="500" placeholder="Optional status change note" />
+            </div>
+            <button class="btn btn-primary" type="submit">Update Status</button>
+        </form>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h3>No next status available</h3>
+            <p>This claim is in a terminal workflow state.</p>
+        </div>
+    }
+</section>
+
+<section class="workspace-panel mt-3">
+    <div class="panel-heading">
+        <div>
+            <h2>Audit Trail</h2>
+            <p>@claim.AuditEntries.Count recorded event(s).</p>
+        </div>
+    </div>
+
+    @if (claim.AuditEntries.Any())
+    {
+        <div class="audit-list">
+            @foreach (var entry in claim.AuditEntries.OrderByDescending(entry => entry.ChangedAt))
+            {
+                <article class="audit-entry">
+                    <div>
+                        <strong>@entry.Action</strong>
+                        @if (!string.IsNullOrWhiteSpace(entry.FieldName))
+                        {
+                            <span>@entry.FieldName</span>
+                        }
+                    </div>
+                    <p>
+                        @if (!string.IsNullOrWhiteSpace(entry.OldValue) || !string.IsNullOrWhiteSpace(entry.NewValue))
+                        {
+                            <span>@(entry.OldValue ?? "Empty")</span>
+                            <span>to</span>
+                            <span>@(entry.NewValue ?? "Empty")</span>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(entry.Notes))
+                        {
+                            <span>@entry.Notes</span>
+                        }
+                    </p>
+                    <small>@entry.ChangedBy on @entry.ChangedAt.LocalDateTime.ToString("MMM d, yyyy h:mm tt")</small>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h3>No audit entries</h3>
+            <p>Claim changes will appear here as the record moves through intake and review.</p>
         </div>
     }
 </section>

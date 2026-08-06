@@ -38,11 +38,6 @@
         <span asp-validation-for="ApprovedAmount" class="text-danger"></span>
     </div>
     <div class="form-field">
-        <label asp-for="Status" class="form-label"></label>
-        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<ClaimStatus>()"></select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
-    <div class="form-field">
         <label asp-for="Priority" class="form-label"></label>
         <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<ClaimPriority>()"></select>
         <span asp-validation-for="Priority" class="text-danger"></span>

@@ -327,6 +327,56 @@ a {
   color: #455a64;
 }
 
+.status-workflow {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(220px, 1fr) auto;
+  align-items: end;
+  gap: 1rem;
+}
+
+.audit-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.audit-entry {
+  padding: 1rem;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.audit-entry div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.audit-entry strong {
+  color: var(--color-sidebar);
+}
+
+.audit-entry div span {
+  color: #607d8b;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.audit-entry p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.35rem 0 0;
+  color: #455a64;
+}
+
+.audit-entry small {
+  display: block;
+  margin-top: 0.35rem;
+  color: #607d8b;
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -426,6 +476,7 @@ a {
 
   .toolbar-form,
   .claims-toolbar,
+  .status-workflow,
   .form-grid,
   .detail-grid {
     grid-template-columns: 1fr;
