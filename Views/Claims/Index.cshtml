@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Claims";
+    var search = ViewData["Search"] as string;
+    var selectedStatus = ViewData["Status"] as ClaimStatus?;
 }
 
 <section class="workspace-panel">
@@ -10,8 +12,30 @@
             <h2>Claims Work Queue</h2>
             <p>Operational queue for submitted, reviewed, approved, denied, and paid claims.</p>
         </div>
-        <button class="btn btn-primary" type="button" disabled>New Claim</button>
+        <a class="btn btn-primary" asp-action="Create">New Claim</a>
     </div>
+
+    @if (TempData["StatusMessage"] is string statusMessage)
+    {
+        <div class="alert alert-success" role="status">@statusMessage</div>
+    }
+
+    <form class="toolbar-form claims-toolbar" asp-action="Index" method="get">
+        <label class="visually-hidden" for="search">Search claims</label>
+        <input id="search" class="form-control" name="search" value="@search" placeholder="Search by claim, patient, or provider" />
+        <select class="form-select" name="status" aria-label="Filter by status">
+            <option value="">All statuses</option>
+            @foreach (var status in Enum.GetValues<ClaimStatus>())
+            {
+                <option value="@status" selected="@(selectedStatus == status)">@status</option>
+            }
+        </select>
+        <button class="btn btn-primary" type="submit">Filter</button>
+        @if (!string.IsNullOrWhiteSpace(search) || selectedStatus.HasValue)
+        {
+            <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+        }
+    </form>
 
     <div class="table-responsive">
         <table class="table align-middle">
@@ -24,6 +48,7 @@
                     <th>Status</th>
                     <th>Priority</th>
                     <th class="text-end">Billed</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,10 +58,15 @@
                         <td>@claim.ClaimNumber</td>
                         <td>@claim.Patient?.LastName, @claim.Patient?.FirstName</td>
                         <td>@claim.Provider?.OrganizationName</td>
-                        <td>@claim.ServiceDate</td>
+                        <td>@claim.ServiceDate.ToString("MMM d, yyyy")</td>
                         <td><span class="status-pill">@claim.Status</span></td>
                         <td>@claim.Priority</td>
                         <td class="text-end">@claim.BilledAmount.ToString("C")</td>
+                        <td class="text-end action-links">
+                            <a asp-action="Details" asp-route-id="@claim.Id">Details</a>
+                            <a asp-action="Edit" asp-route-id="@claim.Id">Edit</a>
+                            <a class="danger-link" asp-action="Delete" asp-route-id="@claim.Id">Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -47,7 +77,7 @@
     {
         <div class="empty-state">
             <h3>No claims found</h3>
-            <p>Claim intake, status changes, and audit trail screens come next.</p>
+            <p>Create a claim intake record or adjust your queue filters.</p>
         </div>
     }
 </section>

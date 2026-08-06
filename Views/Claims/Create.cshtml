@@ -1,0 +1,26 @@
+@model Claim
+
+@{
+    ViewData["Title"] = "New Claim";
+}
+
+<section class="workspace-panel narrow-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>New Claim</h2>
+            <p>Create an intake record tied to a patient, provider, service date, and billed amount.</p>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <partial name="_ClaimForm" model="Model" />
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save Claim</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

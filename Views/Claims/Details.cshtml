@@ -1,0 +1,61 @@
+@model Claim
+
+@{
+    ViewData["Title"] = "Claim Details";
+}
+
+<section class="workspace-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>@Model.ClaimNumber</h2>
+            <p>Claim intake record, financials, and workflow state.</p>
+        </div>
+        <div class="button-row">
+            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
+        </div>
+    </div>
+
+    <dl class="detail-grid">
+        <div>
+            <dt>Patient</dt>
+            <dd>@Model.Patient?.LastName, @Model.Patient?.FirstName</dd>
+        </div>
+        <div>
+            <dt>Provider</dt>
+            <dd>@Model.Provider?.OrganizationName</dd>
+        </div>
+        <div>
+            <dt>Service Date</dt>
+            <dd>@Model.ServiceDate.ToString("MMM d, yyyy")</dd>
+        </div>
+        <div>
+            <dt>Status</dt>
+            <dd><span class="status-pill">@Model.Status</span></dd>
+        </div>
+        <div>
+            <dt>Priority</dt>
+            <dd>@Model.Priority</dd>
+        </div>
+        <div>
+            <dt>Billed Amount</dt>
+            <dd>@Model.BilledAmount.ToString("C")</dd>
+        </div>
+        <div>
+            <dt>Approved Amount</dt>
+            <dd>@(Model.ApprovedAmount?.ToString("C") ?? "Not approved")</dd>
+        </div>
+        <div>
+            <dt>Updated</dt>
+            <dd>@Model.UpdatedAt.LocalDateTime.ToString("MMM d, yyyy h:mm tt")</dd>
+        </div>
+    </dl>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Notes))
+    {
+        <div class="notes-panel">
+            <h3>Notes</h3>
+            <p>@Model.Notes</p>
+        </div>
+    }
+</section>

@@ -1,0 +1,45 @@
+@model Claim
+
+@{
+    ViewData["Title"] = "Delete Claim";
+}
+
+<section class="workspace-panel narrow-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Delete Claim</h2>
+            <p>Review this claim intake record before removal.</p>
+        </div>
+    </div>
+
+    <div class="alert alert-danger" role="alert">
+        This action permanently removes the claim record.
+    </div>
+
+    <dl class="detail-grid">
+        <div>
+            <dt>Claim</dt>
+            <dd>@Model.ClaimNumber</dd>
+        </div>
+        <div>
+            <dt>Patient</dt>
+            <dd>@Model.Patient?.LastName, @Model.Patient?.FirstName</dd>
+        </div>
+        <div>
+            <dt>Provider</dt>
+            <dd>@Model.Provider?.OrganizationName</dd>
+        </div>
+        <div>
+            <dt>Status</dt>
+            <dd>@Model.Status</dd>
+        </div>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit">Delete Claim</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>
