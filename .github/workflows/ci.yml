@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore
+        run: |
+          dotnet restore medicare-claims-manager.csproj
+          dotnet restore tests/MedicareClaimsManager.Tests/MedicareClaimsManager.Tests.csproj
+
+      - name: Build
+        run: dotnet build medicare-claims-manager.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/MedicareClaimsManager.Tests/MedicareClaimsManager.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+      - name: Publish validation
+        run: dotnet publish medicare-claims-manager.csproj --configuration Release --no-build --output ./publish

@@ -81,6 +81,20 @@ The user must already exist in ASP.NET Core Identity. The role is assigned durin
 - [Deployment Guide](docs/DEPLOYMENT.md)
 - [Operations Guide](docs/OPERATIONS.md)
 
+## Quality Checks
+
+Run the full local verification suite:
+
+```bash
+dotnet restore medicare-claims-manager.csproj
+dotnet restore tests/MedicareClaimsManager.Tests/MedicareClaimsManager.Tests.csproj
+dotnet build medicare-claims-manager.csproj --configuration Release --no-restore
+dotnet test tests/MedicareClaimsManager.Tests/MedicareClaimsManager.Tests.csproj --configuration Release --no-restore
+dotnet publish medicare-claims-manager.csproj --configuration Release --output ./publish-check
+```
+
+GitHub Actions runs the same restore, build, test, and publish validation flow on pushes and pull requests to `main`.
+
 ## Security Notes
 
 - Do not commit real patient data, Medicare identifiers, credentials, API keys, or production exports.

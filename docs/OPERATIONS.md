@@ -45,4 +45,4 @@ dotnet build
 dotnet test
 ```
 
-There are currently no automated test projects. Add tests before introducing complex business rules or deployment automation.
+The GitHub Actions CI workflow runs restore, Release build, tests, and publish validation on pushes and pull requests to `main`.
