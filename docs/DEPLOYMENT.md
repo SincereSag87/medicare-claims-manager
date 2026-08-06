@@ -67,6 +67,17 @@ Configure these repository secrets:
 
 The deployment workflow can be run manually with `workflow_dispatch`. It also runs after the `CI` workflow succeeds on `main`.
 
+## Current Azure Deployment
+
+| Resource | Value |
+| --- | --- |
+| Resource group | `rg-medicare-claims-manager` |
+| Region | `Central US` |
+| App Service | `medicare-claims-manager-75759` |
+| App URL | `https://medicare-claims-manager-75759.azurewebsites.net` |
+| SQL server | `mcm-sql-75759.database.windows.net` |
+| SQL database | `MedicareClaimsManagerDb` |
+
 ## Deployment Checklist
 
 - Production connection string is stored in App Service settings, not source code.

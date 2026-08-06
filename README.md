@@ -148,6 +148,10 @@ GitHub Actions runs the same restore, build, test, and publish validation flow o
 
 The project targets Azure App Service with Azure SQL Database. See [Deployment Guide](docs/DEPLOYMENT.md).
 
+Live Azure App Service:
+
+- https://medicare-claims-manager-75759.azurewebsites.net
+
 Deployment workflow:
 
 - `.github/workflows/ci.yml`: restore, build, test, publish validation.
