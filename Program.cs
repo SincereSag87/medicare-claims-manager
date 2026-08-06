@@ -99,3 +99,5 @@ static async Task SeedAdminUserAsync(IServiceProvider services, IConfiguration c
         await userManager.AddToRoleAsync(user, "Administrator");
     }
 }
+
+public partial class Program;

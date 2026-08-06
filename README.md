@@ -2,6 +2,35 @@
 
 ASP.NET Core MVC application for managing Medicare claim workflows, built with a professional healthcare operations interface.
 
+## Portfolio Summary
+
+Medicare Claims Manager demonstrates C#, ASP.NET Core MVC, Entity Framework Core, SQL Server, Identity, role-based access control, operational reporting, audit trails, automated tests, and CI/CD deployment readiness in a healthcare revenue cycle scenario.
+
+## Features
+
+- Secure authentication with ASP.NET Core Identity.
+- Role-based access model for `Administrator`, `ClaimsManager`, `BillingSpecialist`, and `ReadOnly`.
+- Patients CRUD with duplicate Medicare number validation.
+- Providers CRUD with NPI validation.
+- Claims intake CRUD with patient/provider selection.
+- Controlled claim status workflow with terminal states.
+- Claim audit trail for creation, field edits, and status changes.
+- Reports dashboard for status mix, priority mix, provider performance, financial totals, and workflow activity.
+- Admin panel for user role assignments.
+- Development-only synthetic seed data for demo-ready first runs.
+- Automated xUnit tests and GitHub Actions CI.
+- Azure App Service deployment workflow template.
+
+## Application Screens
+
+Capture these screens after running migrations and launching the app with development seed data enabled:
+
+- Dashboard: operational metrics, recent workflow, and recent claim activity.
+- Claims: work queue with status filtering.
+- Claim Details: workflow transition controls and audit trail.
+- Reports: financial summary, status breakdown, priority mix, and provider performance.
+- Admin: user access and role assignment.
+
 ## Stack
 
 - ASP.NET Core MVC on .NET 9
@@ -28,15 +57,26 @@ ASP.NET Core MVC application for managing Medicare claim workflows, built with a
 
 ## Roadmap
 
-1. Project Foundation
-2. Authentication and Identity
-3. Dashboard
-4. Patients Module
-5. Providers Module
-6. Claims Module
-7. Reports and Analytics
-8. Admin Panel
-9. Deployment and Documentation
+Completed:
+
+- Project foundation
+- Authentication and Identity
+- Dashboard
+- Patients module
+- Providers module
+- Claims module
+- Claim workflow and audit trail
+- Reports and analytics
+- Admin panel
+- Deployment documentation
+- Development seed data
+- Automated tests and CI/CD workflow templates
+
+Next improvements:
+
+- End-to-end browser tests
+- Production Azure resource provisioning scripts
+- Portfolio screenshots after live deployment
 
 ## Getting Started
 
@@ -88,6 +128,7 @@ Set it to `false` to start with an empty local database.
 - [Architecture Overview](docs/ARCHITECTURE.md)
 - [Deployment Guide](docs/DEPLOYMENT.md)
 - [Operations Guide](docs/OPERATIONS.md)
+- [Portfolio Notes](docs/PORTFOLIO.md)
 
 ## Quality Checks
 
@@ -102,6 +143,15 @@ dotnet publish medicare-claims-manager.csproj --configuration Release --output .
 ```
 
 GitHub Actions runs the same restore, build, test, and publish validation flow on pushes and pull requests to `main`.
+
+## Deployment
+
+The project targets Azure App Service with Azure SQL Database. See [Deployment Guide](docs/DEPLOYMENT.md).
+
+Deployment workflow:
+
+- `.github/workflows/ci.yml`: restore, build, test, publish validation.
+- `.github/workflows/azure-deploy.yml`: publish and deploy to Azure App Service after CI succeeds on `main`.
 
 ## Security Notes
 

@@ -26,14 +26,26 @@ public class HomeController : Controller
             TotalPatients = await _context.Patients.CountAsync(),
             TotalProviders = await _context.Providers.CountAsync(),
             OpenClaims = await _context.Claims.CountAsync(claim => openStatuses.Contains(claim.Status)),
+            PaidClaims = await _context.Claims.CountAsync(claim => claim.Status == ClaimStatus.Paid),
+            DeniedClaims = await _context.Claims.CountAsync(claim => claim.Status == ClaimStatus.Denied),
             PendingClaimValue = await _context.Claims
                 .Where(claim => openStatuses.Contains(claim.Status))
                 .SumAsync(claim => claim.BilledAmount),
+            ApprovedClaimValue = await _context.Claims
+                .Where(claim => claim.Status == ClaimStatus.Approved || claim.Status == ClaimStatus.Paid)
+                .SumAsync(claim => claim.ApprovedAmount ?? 0),
             RecentClaims = await _context.Claims
                 .Include(claim => claim.Patient)
                 .Include(claim => claim.Provider)
                 .OrderByDescending(claim => claim.UpdatedAt)
                 .Take(5)
+                .ToListAsync(),
+            RecentWorkflowActivity = await _context.ClaimAuditEntries
+                .AsNoTracking()
+                .Include(entry => entry.Claim)
+                .Where(entry => entry.Action == "Status Changed")
+                .OrderByDescending(entry => entry.ChangedAt)
+                .Take(4)
                 .ToListAsync()
         };
 

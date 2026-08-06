@@ -62,3 +62,5 @@ dotnet test
 ```
 
 The GitHub Actions CI workflow runs restore, Release build, tests, and publish validation on pushes and pull requests to `main`.
+
+Deployment to Azure App Service is handled by `.github/workflows/azure-deploy.yml` after CI succeeds on `main`, once the required Azure secrets are configured.

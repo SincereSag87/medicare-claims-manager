@@ -512,6 +512,10 @@ a {
   gap: 1rem;
 }
 
+.compact-financial-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .financial-grid div {
   padding: 1rem;
   background: var(--color-background);
@@ -522,6 +526,10 @@ a {
 .financial-grid strong {
   margin-top: 0.3rem;
   font-size: 1.25rem;
+}
+
+.compact-audit-list .audit-entry {
+  padding: 0.8rem;
 }
 
 .role-grid {

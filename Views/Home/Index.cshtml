@@ -18,18 +18,75 @@
         <strong>@Model.OpenClaims</strong>
     </article>
     <article class="metric-card">
-        <span>Pending Value</span>
-        <strong>@Model.PendingClaimValue.ToString("C")</strong>
+        <span>Approved Value</span>
+        <strong>@Model.ApprovedClaimValue.ToString("C")</strong>
     </article>
 </section>
 
-<section class="workspace-panel">
+<section class="analytics-grid">
+    <article class="workspace-panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Work Queue Snapshot</h2>
+                <p>Seeded demo data immediately shows active, denied, paid, and approved work.</p>
+            </div>
+            <a class="btn btn-primary" asp-controller="Claims" asp-action="Index">View Claims</a>
+        </div>
+        <div class="financial-grid compact-financial-grid">
+            <div>
+                <span>Pending Value</span>
+                <strong>@Model.PendingClaimValue.ToString("C")</strong>
+            </div>
+            <div>
+                <span>Paid Claims</span>
+                <strong>@Model.PaidClaims</strong>
+            </div>
+            <div>
+                <span>Denied Claims</span>
+                <strong>@Model.DeniedClaims</strong>
+            </div>
+        </div>
+    </article>
+
+    <article class="workspace-panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Recent Workflow</h2>
+                <p>Latest status changes from the audit trail.</p>
+            </div>
+        </div>
+        @if (Model.RecentWorkflowActivity.Any())
+        {
+            <div class="audit-list compact-audit-list">
+                @foreach (var entry in Model.RecentWorkflowActivity)
+                {
+                    <article class="audit-entry">
+                        <div>
+                            <strong>@entry.Claim?.ClaimNumber</strong>
+                            <span>@entry.OldValue to @entry.NewValue</span>
+                        </div>
+                        <small>@entry.ChangedAt.LocalDateTime.ToString("MMM d, h:mm tt")</small>
+                    </article>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <h3>No workflow activity</h3>
+                <p>Status changes will appear after seeded or live claims move through review.</p>
+            </div>
+        }
+    </article>
+</section>
+
+<section class="workspace-panel mt-3">
     <div class="panel-heading">
         <div>
             <h2>Recent Claim Activity</h2>
             <p>Claims needing review, documentation, approval, or payment follow-up.</p>
         </div>
-        <a class="btn btn-primary" asp-controller="Claims" asp-action="Index">View Claims</a>
+        <a class="btn btn-outline-secondary" asp-controller="Reports" asp-action="Index">View Reports</a>
     </div>
 
     @if (Model.RecentClaims.Any())
@@ -42,6 +99,7 @@
                         <th>Patient</th>
                         <th>Provider</th>
                         <th>Status</th>
+                        <th>Priority</th>
                         <th class="text-end">Billed</th>
                     </tr>
                 </thead>
@@ -53,6 +111,7 @@
                             <td>@claim.Patient?.LastName, @claim.Patient?.FirstName</td>
                             <td>@claim.Provider?.OrganizationName</td>
                             <td><span class="status-pill">@claim.Status</span></td>
+                            <td>@claim.Priority</td>
                             <td class="text-end">@claim.BilledAmount.ToString("C")</td>
                         </tr>
                     }
@@ -64,23 +123,7 @@
     {
         <div class="empty-state">
             <h3>No claim activity yet</h3>
-            <p>Create the first patient, provider, and claim records after the initial migration is applied.</p>
+            <p>Enable development seed data or create the first patient, provider, and claim records.</p>
         </div>
     }
-</section>
-
-<section class="roadmap-grid">
-    <article>
-        <h2>Next Build Steps</h2>
-        <ol>
-            <li>Apply EF migrations against SQL Server.</li>
-            <li>Scaffold secured CRUD workflows for patients and providers.</li>
-            <li>Add claim intake, status transitions, and audit history.</li>
-            <li>Build reporting views for denial, approval, and paid trends.</li>
-        </ol>
-    </article>
-    <article>
-        <h2>Access Model</h2>
-        <p>Identity is configured for role-based access with Administrator, ClaimsManager, BillingSpecialist, and ReadOnly roles.</p>
-    </article>
 </section>

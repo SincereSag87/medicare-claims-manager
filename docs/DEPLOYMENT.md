@@ -54,6 +54,19 @@ For Azure App Service, run migrations from a secure operator machine or CI job w
 7. Restart the App Service.
 8. Register the first admin user, then restart once more if `AdminUser__Email` was added after registration.
 
+## GitHub Actions Deployment
+
+The repository includes `.github/workflows/azure-deploy.yml`.
+
+Configure these repository secrets:
+
+| Secret | Purpose |
+| --- | --- |
+| `AZURE_WEBAPP_NAME` | Azure App Service name. |
+| `AZURE_WEBAPP_PUBLISH_PROFILE` | Publish profile XML from Azure App Service. |
+
+The deployment workflow can be run manually with `workflow_dispatch`. It also runs after the `CI` workflow succeeds on `main`.
+
 ## Deployment Checklist
 
 - Production connection string is stored in App Service settings, not source code.
