@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Patients";
+    var search = ViewData["Search"] as string;
 }
 
 <section class="workspace-panel">
@@ -10,8 +11,23 @@
             <h2>Patient Registry</h2>
             <p>Secure index for Medicare member claim history and contact details.</p>
         </div>
-        <button class="btn btn-primary" type="button" disabled>Add Patient</button>
+        <a class="btn btn-primary" asp-action="Create">Add Patient</a>
     </div>
+
+    @if (TempData["StatusMessage"] is string statusMessage)
+    {
+        <div class="alert alert-success" role="status">@statusMessage</div>
+    }
+
+    <form class="toolbar-form" asp-action="Index" method="get">
+        <label class="visually-hidden" for="search">Search patients</label>
+        <input id="search" class="form-control" name="search" value="@search" placeholder="Search by name, Medicare number, email, or phone" />
+        <button class="btn btn-primary" type="submit">Search</button>
+        @if (!string.IsNullOrWhiteSpace(search))
+        {
+            <a class="btn btn-outline-secondary" asp-action="Index">Clear</a>
+        }
+    </form>
 
     <div class="table-responsive">
         <table class="table align-middle">
@@ -22,6 +38,7 @@
                     <th>Date of Birth</th>
                     <th>Phone</th>
                     <th>Email</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,9 +47,14 @@
                     <tr>
                         <td>@patient.LastName, @patient.FirstName</td>
                         <td>@patient.MedicareNumber</td>
-                        <td>@patient.DateOfBirth</td>
+                        <td>@patient.DateOfBirth.ToString("MMM d, yyyy")</td>
                         <td>@patient.Phone</td>
                         <td>@patient.Email</td>
+                        <td class="text-end action-links">
+                            <a asp-action="Details" asp-route-id="@patient.Id">Details</a>
+                            <a asp-action="Edit" asp-route-id="@patient.Id">Edit</a>
+                            <a class="danger-link" asp-action="Delete" asp-route-id="@patient.Id">Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -43,7 +65,7 @@
     {
         <div class="empty-state">
             <h3>No patients found</h3>
-            <p>Patient CRUD is the next implementation step after the foundation migration.</p>
+            <p>Add a patient record or adjust your search criteria.</p>
         </div>
     }
 </section>

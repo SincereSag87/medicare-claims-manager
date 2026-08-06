@@ -1,0 +1,36 @@
+@model Patient
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+<div class="form-grid">
+    <div class="form-field">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" autocomplete="given-name" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" autocomplete="family-name" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="MedicareNumber" class="form-label"></label>
+        <input asp-for="MedicareNumber" class="form-control" autocomplete="off" />
+        <span asp-validation-for="MedicareNumber" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="DateOfBirth" class="form-label"></label>
+        <input asp-for="DateOfBirth" class="form-control" type="date" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" autocomplete="tel" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div class="form-field">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" autocomplete="email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+</div>

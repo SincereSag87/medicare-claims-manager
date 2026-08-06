@@ -1,0 +1,57 @@
+@model Patient
+
+@{
+    ViewData["Title"] = "Delete Patient";
+    var hasClaims = Model.Claims.Any();
+}
+
+<section class="workspace-panel narrow-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Delete Patient</h2>
+            <p>Review this record before removal.</p>
+        </div>
+    </div>
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    @if (hasClaims)
+    {
+        <div class="alert alert-warning" role="alert">
+            This patient has @Model.Claims.Count linked claim record(s) and cannot be deleted.
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            This action permanently removes the patient record.
+        </div>
+    }
+
+    <dl class="detail-grid">
+        <div>
+            <dt>Name</dt>
+            <dd>@Model.LastName, @Model.FirstName</dd>
+        </div>
+        <div>
+            <dt>Medicare Number</dt>
+            <dd>@Model.MedicareNumber</dd>
+        </div>
+        <div>
+            <dt>Date of Birth</dt>
+            <dd>@Model.DateOfBirth.ToString("MMM d, yyyy")</dd>
+        </div>
+        <div>
+            <dt>Contact</dt>
+            <dd>@(Model.Email ?? Model.Phone ?? "Not provided")</dd>
+        </div>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-actions">
+            <button class="btn btn-danger" type="submit" disabled="@hasClaims">Delete Patient</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>

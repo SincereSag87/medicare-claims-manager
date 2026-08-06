@@ -1,0 +1,26 @@
+@model Patient
+
+@{
+    ViewData["Title"] = "Add Patient";
+}
+
+<section class="workspace-panel narrow-panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Add Patient</h2>
+            <p>Create a synthetic or approved patient record for claim intake.</p>
+        </div>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <partial name="_PatientForm" model="Model" />
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save Patient</button>
+            <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
