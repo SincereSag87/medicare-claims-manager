@@ -1,0 +1,194 @@
+@model ReportsViewModel
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<section class="metric-grid">
+    <article class="metric-card">
+        <span>Total Claims</span>
+        <strong>@Model.TotalClaims</strong>
+    </article>
+    <article class="metric-card">
+        <span>Open Claims</span>
+        <strong>@Model.OpenClaims</strong>
+    </article>
+    <article class="metric-card">
+        <span>Outstanding</span>
+        <strong>@Model.TotalOutstanding.ToString("C")</strong>
+    </article>
+    <article class="metric-card">
+        <span>Approval Rate</span>
+        <strong>@Model.ApprovalRate.ToString("P1")</strong>
+    </article>
+</section>
+
+<section class="analytics-grid">
+    <article class="workspace-panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Status Breakdown</h2>
+                <p>Claim count and billed value by workflow state.</p>
+            </div>
+        </div>
+        @if (Model.StatusBreakdown.Any())
+        {
+            <div class="report-list">
+                @foreach (var item in Model.StatusBreakdown)
+                {
+                    var percent = Model.TotalClaims == 0 ? 0 : (decimal)item.Count / Model.TotalClaims;
+                    <div class="report-row">
+                        <div>
+                            <strong>@item.Status</strong>
+                            <span>@item.BilledAmount.ToString("C") billed</span>
+                        </div>
+                        <div class="report-bar" aria-hidden="true">
+                            <span style="width: @percent.ToString("P0")"></span>
+                        </div>
+                        <em>@item.Count</em>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <h3>No claim status data</h3>
+                <p>Create claims to populate workflow reporting.</p>
+            </div>
+        }
+    </article>
+
+    <article class="workspace-panel">
+        <div class="panel-heading">
+            <div>
+                <h2>Priority Mix</h2>
+                <p>Operational urgency across the current claim population.</p>
+            </div>
+        </div>
+        @if (Model.PriorityBreakdown.Any())
+        {
+            <div class="report-list">
+                @foreach (var item in Model.PriorityBreakdown)
+                {
+                    var percent = Model.TotalClaims == 0 ? 0 : (decimal)item.Count / Model.TotalClaims;
+                    <div class="report-row compact">
+                        <div>
+                            <strong>@item.Priority</strong>
+                            <span>@percent.ToString("P1") of claims</span>
+                        </div>
+                        <em>@item.Count</em>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <h3>No priority data</h3>
+                <p>Claims will appear here after intake.</p>
+            </div>
+        }
+    </article>
+</section>
+
+<section class="workspace-panel mt-3">
+    <div class="panel-heading">
+        <div>
+            <h2>Financial Summary</h2>
+            <p>Billed, approved, paid, and denied claim indicators.</p>
+        </div>
+    </div>
+    <div class="financial-grid">
+        <div>
+            <span>Total Billed</span>
+            <strong>@Model.TotalBilled.ToString("C")</strong>
+        </div>
+        <div>
+            <span>Total Approved</span>
+            <strong>@Model.TotalApproved.ToString("C")</strong>
+        </div>
+        <div>
+            <span>Paid Claims</span>
+            <strong>@Model.PaidClaims</strong>
+        </div>
+        <div>
+            <span>Denied Claims</span>
+            <strong>@Model.DeniedClaims</strong>
+        </div>
+    </div>
+</section>
+
+<section class="workspace-panel mt-3">
+    <div class="panel-heading">
+        <div>
+            <h2>Provider Performance</h2>
+            <p>Top providers by billed amount.</p>
+        </div>
+    </div>
+    @if (Model.ProviderPerformance.Any())
+    {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th class="text-end">Claims</th>
+                        <th class="text-end">Billed</th>
+                        <th class="text-end">Approved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var provider in Model.ProviderPerformance)
+                    {
+                        <tr>
+                            <td>@provider.ProviderName</td>
+                            <td class="text-end">@provider.ClaimCount</td>
+                            <td class="text-end">@provider.BilledAmount.ToString("C")</td>
+                            <td class="text-end">@provider.ApprovedAmount.ToString("C")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h3>No provider performance data</h3>
+            <p>Provider performance appears once claims are connected to providers.</p>
+        </div>
+    }
+</section>
+
+<section class="workspace-panel mt-3">
+    <div class="panel-heading">
+        <div>
+            <h2>Recent Workflow Activity</h2>
+            <p>Latest claim status changes from the audit trail.</p>
+        </div>
+    </div>
+    @if (Model.RecentWorkflowActivity.Any())
+    {
+        <div class="audit-list">
+            @foreach (var entry in Model.RecentWorkflowActivity)
+            {
+                <article class="audit-entry">
+                    <div>
+                        <strong>@entry.Claim?.ClaimNumber</strong>
+                        <span>@entry.OldValue to @entry.NewValue</span>
+                    </div>
+                    <p>@(entry.Notes ?? "No workflow note")</p>
+                    <small>@entry.ChangedBy on @entry.ChangedAt.LocalDateTime.ToString("MMM d, yyyy h:mm tt")</small>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <h3>No workflow activity</h3>
+            <p>Status changes will appear here after claims move through review.</p>
+        </div>
+    }
+</section>
